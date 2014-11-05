@@ -1,0 +1,27 @@
+package com.beamfield.tectocraft.nei;
+
+import com.beamfield.tectocraft.gui.GuiTectoCrafter;
+
+import codechicken.nei.api.API;
+import codechicken.nei.api.IConfigureNEI;
+import codechicken.nei.recipe.DefaultOverlayHandler;
+
+public class NEIConfig implements IConfigureNEI{
+	//private static final NEITectoCrafterRecipeHandler tectocrafter = new NEITectoCrafterRecipeHandler();
+	@Override
+	public void loadConfig() {
+	//	API.registerRecipeHandler(tectocrafter);
+		//API.registerGuiOverlayHandler(GuiTectoCrafter.class, new DefaultOverlayHandler(), "crafting");
+	}
+
+	@Override
+	public String getName() {
+		return "TectoCraft NEI";
+	}
+
+	@Override
+	public String getVersion() {
+		return "1.0";
+	}
+
+}

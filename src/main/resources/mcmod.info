@@ -1,0 +1,16 @@
+[
+{
+  "modid": "tectocraft",
+  "name": "TectoCraft",
+  "description": "This mod adds useful gadgets what you can use to make your life much easier.",
+  "version": "0.1.0b",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Beamfield"],
+  "credits": "Beamfield",
+  "logoFile": "assets/tectocraft/logo/logo.png",
+  "screenshots": [],
+  "dependencies": [mod_MinecraftForge]
+}
+]

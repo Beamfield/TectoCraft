@@ -1,0 +1,4 @@
+{
+	"jetpack": {"category": "master","sounds": [{"name": "jetpack","stream": false}]},
+	"minigun": {"category": "master","sounds": [{"name": "minigun","stream": false}]}
+}

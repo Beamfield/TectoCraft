@@ -1,0 +1,316 @@
+/**package com.beamfield.tectocraft.nei;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.lwjgl.opengl.GL11;
+
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.ShapedRecipes;
+import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
+import codechicken.nei.PositionedStack;
+import codechicken.nei.api.IOverlayHandler;
+import codechicken.nei.api.IRecipeOverlayRenderer;
+import codechicken.nei.recipe.GuiRecipe;
+import codechicken.nei.recipe.ICraftingHandler;
+import codechicken.nei.recipe.TemplateRecipeHandler;
+
+import com.beamfield.tectocraft.ExpandedOreRecipe;
+import com.beamfield.tectocraft.JavaLibrary;
+import com.beamfield.tectocraft.TectoCraft;
+import com.beamfield.tectocraft.gui.*;
+import com.beamfield.tectocraft.handler.TectoCraftingManager;
+import com.beamfield.tectocraft.reference.Reference;
+
+public class NEITectoCrafterRecipeHandler extends TemplateRecipeHandler {
+	public class TectoRecipe extends CachedRecipe {
+
+		private IRecipe recipe;
+
+		public TectoRecipe(IRecipe rec) {
+			recipe = rec;
+		}
+
+		@Override
+		public PositionedStack getResult() {
+			return new PositionedStack(recipe.getRecipeOutput(), 111, 24);
+		}
+		public void copyRecipeToItemStackArray(ItemStack[] in, IRecipe ire) {
+			ItemStack[] isin = new ItemStack[9];
+			int num;
+			int w = 0;
+			int h = 0;
+			JavaLibrary.pConsole("Recipe is null!", ire == null);
+			JavaLibrary.pConsole("ItemStack array is null!", in == null);
+			if (ire instanceof ShapedRecipes) {
+				ShapedRecipes r = (ShapedRecipes)ire;
+				num = r.recipeItems.length;
+				w = r.recipeWidth;
+				h = r.recipeHeight;
+				for (int i = 0; i < r.recipeItems.length; i++) {
+					isin[i] = r.recipeItems[i];
+				}
+
+			}
+			else if (ire instanceof ShapedOreRecipe) {
+				ShapedOreRecipe so = (ShapedOreRecipe)ire;
+				Object[] objin = so.getInput();
+				w = 3;
+				h = 3;
+				for (int i = 0; i < objin.length; i++) {
+					if (objin[i] instanceof ItemStack)
+						isin[i] = (ItemStack)objin[i];
+					else if (objin[i] instanceof ArrayList) {
+						if (!((List<IRecipe>)objin[i]).isEmpty()) {
+							int k = (int)((System.currentTimeMillis()/500)%((List)objin[i]).size());
+							isin[i] = (ItemStack)((ArrayList)objin[i]).get(k);
+						}
+					}
+				}
+			}
+			else if (ire instanceof //ExpandedOreRecipe) {
+			//	ExpandedOreRecipe so = (ExpandedOreRecipe)ire;
+				Object[] objin = so.getInputCopy();
+				w = so.getWidth();
+				h = so.getHeight();
+				for (int i = 0; i < objin.length; i++) {
+					if (objin[i] instanceof ItemStack)
+						isin[i] = (ItemStack)objin[i];
+					else if (objin[i] instanceof ArrayList) {
+						if (!((List<IRecipe>)objin[i]).isEmpty()) {
+							int k = (int)((System.currentTimeMillis()/500)%((List)objin[i]).size());
+							isin[i] = (ItemStack)((ArrayList)objin[i]).get(k);
+						}
+					}
+				}
+			}
+			else if (ire instanceof ShapelessRecipes) {
+				ShapelessRecipes sr = (ShapelessRecipes)ire;
+				for (int i = 0; i < sr.getRecipeSize(); i++) {
+					in[i] = (ItemStack)sr.recipeItems.get(i);
+				}
+			}
+			else if (ire instanceof ShapelessOreRecipe) {
+				ShapelessOreRecipe so = (ShapelessOreRecipe)ire;
+				for (int i = 0; i < so.getRecipeSize(); i++) {
+					Object obj = so.getInput().get(i);
+					if (obj instanceof ItemStack)
+						in[i] = (ItemStack)obj;
+					else if (obj instanceof ArrayList) {
+						int k = (int)((System.currentTimeMillis()/500)%((List)obj).size());
+						in[i] = (ItemStack)((ArrayList)obj).get(k);
+					}
+				}
+			}
+			if (w == 3 && h == 3) {
+				for (int i = 0; i < 9; i++)
+					in[i] = isin[i];
+			}
+			if (w == 1 && h == 1) {
+				in[4] = isin[0];
+			}
+			if (w == 2 && h == 2) {
+				in[0] = isin[0];
+				in[1] = isin[1];
+				in[3] = isin[2];
+				in[4] = isin[3];
+			}
+			if (w == 1 && h == 2) {
+				in[4] = isin[0];
+				in[7] = isin[1];
+			}
+			if (w == 2 && h == 1) {
+				in[0] = isin[0];
+				in[1] = isin[1];
+			}
+			if (w == 3 && h == 1) {
+				in[0] = isin[0];
+				in[1] = isin[1];
+				in[2] = isin[2];
+			}
+			if (w == 1 && h == 3) {
+				in[1] = isin[0];
+				in[4] = isin[1];
+				in[7] = isin[2];
+			}
+			if (w == 2 && h == 3) {
+				in[0] = isin[0];
+				in[1] = isin[1];
+				in[3] = isin[2];
+				in[4] = isin[3];
+				in[6] = isin[4];
+				in[7] = isin[5];
+			}
+			if (w == 3 && h == 2) {
+				in[3] = isin[0];
+				in[4] = isin[1];
+				in[5] = isin[2];
+				in[6] = isin[3];
+				in[7] = isin[4];
+				in[8] = isin[5];
+			}
+			for (int i = 0; i < in.length; i++) {
+				if (in[i] != null) {
+					if (in[i].stackSize > 1)
+						in[i].stackSize = 1;
+				}
+			}
+		}
+
+		@Override
+		public ArrayList<PositionedStack> getIngredients()
+		{
+			ArrayList<PositionedStack> stacks = new ArrayList<PositionedStack>();
+			ItemStack[] in = new ItemStack[9];
+			copyRecipeToItemStackArray(in, recipe);
+			for (int i = 0; i < 3; i++) {
+				for (int j = 0; j < 3; j++) {
+					ItemStack is = in[i*3+j];
+					int dx = 21+18*j;
+					int dy = 6+18*i;
+					if (is != null) {
+						PositionedStack pos = new PositionedStack(is, dx, dy);
+						stacks.add(pos);
+					}
+				}
+			}
+			return stacks;
+		}
+	}
+	@Override
+	public String getRecipeName() {
+		return "Tectonic Crafter";
+	}
+
+	@Override
+	public int numRecipes() {
+		return 0;
+	}
+
+	@Override
+	public void drawBackground(int recipe) {
+		GL11.glColor4f(1, 1, 1, 1);
+	//	TextureHelper.bindTexture(TectoCraft.class, this.getGuiTexture());
+	//	GuiAPI.instance.drawTexturedModalRect(0, 0, 5, 11, 166, 70);
+	}
+
+	@Override
+	public void drawForeground(int recipe) {
+
+	}
+    public Class<? extends GuiContainer> getGuiClass()
+	{
+	   return GuiTectoCrafter.class;
+	}
+
+	@Override
+	public List<PositionedStack> getIngredientStacks(int recipe) {
+		return null;
+	}
+
+	@Override
+	public List<PositionedStack> getOtherStacks(int recipetype) {
+		return null;
+	}
+
+	@Override
+	public PositionedStack getResultStack(int recipe) {
+		return null;
+	}
+
+	@Override
+	public void onUpdate() {
+
+	}
+
+	@Override
+	public boolean hasOverlay(GuiContainer gui, Container container, int recipe) {
+		return false;
+	}
+
+	@Override
+	public IRecipeOverlayRenderer getOverlayRenderer(GuiContainer gui,
+			int recipe) {
+		return null;
+	}
+
+	@Override
+	public IOverlayHandler getOverlayHandler(GuiContainer gui, int recipe) {
+
+		IOverlayHandler ioh = super.getOverlayHandler(gui, recipe);
+		return ioh;
+	}
+
+	@Override
+	public int recipiesPerPage() {
+		return 1;
+	}
+
+	@Override
+	public List<String> handleTooltip(GuiRecipe gui, List<String> currenttip,
+			int recipe) {
+		return null;
+	}
+
+	@Override
+	public List<String> handleItemTooltip(GuiRecipe gui, ItemStack stack,
+			List<String> currenttip, int recipe) {
+		return null;
+	}
+
+	@Override
+	public boolean keyTyped(GuiRecipe gui, char keyChar, int keyCode, int recipe) {
+		return false;
+	}
+
+	@Override
+	public boolean mouseClicked(GuiRecipe gui, int button, int recipe) {
+		return false;
+	}
+
+	@Override
+	public ICraftingHandler getRecipeHandler(String outputId, Object... results) {
+		return null;
+	}
+
+	@Override
+	public String getGuiTexture() {
+		return Reference.MODID+":/textures/gui/GUITectoCrafter.png";
+	}
+	@Override
+	public String getOverlayIdentifier()
+	{
+		return "crafting";
+	}
+	@Override
+	public void loadCraftingRecipes(ItemStack result) {
+		List<IRecipe> li = TectoCraftingManager.getInstance().getRecipeList();
+		for (int i = 0; i < li.size(); i++) {
+			IRecipe ir = li.get(i);
+			if (matchStacks(result, ir.getRecipeOutput()))
+				arecipes.addAll((Collection<? extends CachedRecipe>) new TectoCraftingManager());
+		}
+	}
+	public static boolean matchStacks(ItemStack a, ItemStack b) {
+		if (a == null && b == null)
+			return true;
+		if (a == null || b == null)
+			return false;
+		if (a.getItem() == null || b.getItem() == null)
+			return false;
+
+		if (a.getItem().getHasSubtypes() || b.getItem().getHasSubtypes())
+			return (a.getItem() == b.getItem() && (a.getItemDamage() == b.getItemDamage() || a.getItemDamage() == OreDictionary.WILDCARD_VALUE || b.getItemDamage() == OreDictionary.WILDCARD_VALUE));
+		else
+			return a.getItem() == b.getItem();
+	}
+}
+**/
