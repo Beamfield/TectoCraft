@@ -37,7 +37,7 @@ public class TileEntityTectonicOven extends TileEntity implements ISidedInventor
 
 	private ItemStack[] slots = new ItemStack [6];
 
-	public int furnaceSpeed = 150;
+	public static int furnaceSpeed = 150;
 	public int burnTime;				
 	public int currentItemBurnTime;		
 	public int cookTime;	
@@ -114,7 +114,7 @@ public class TileEntityTectonicOven extends TileEntity implements ISidedInventor
 	        	return this.energyStorage.getEnergyStored() > 0;
 	    	}
 	    
-		 	public static int getItemPower(ItemStack par0ItemStack){
+		 	public int getItemPower(ItemStack par0ItemStack){
 	        	if (par0ItemStack == null){
 	            	return 0;
 	        	}else{
@@ -124,33 +124,6 @@ public class TileEntityTectonicOven extends TileEntity implements ISidedInventor
 	        		if(i == Item.getItemFromBlock(Blocks.redstone_block)) return 90;
 	            	return 0;
 	        	}
-			if(this.isBurning() && this.canSmelt()) {
-				//speed upgrade
-					for(int a = 2; a == 5; a++){
-					if(this.slots[a].getItem() == new ItemStack(TectoCraft.tectoMatrix, 1, 3).getItem()){
-						furnaceSpeed = furnaceSpeed*10;
-						}
-					}
-
-				this.cookTime++;
-
-				if(this.cookTime == this.furnaceSpeed) {
-					this.cookTime = 0;
-					this.smeltItem();
-					flag1 = true;
-				}
-			} else {
-				this.cookTime = 0;
-			}
-
-			if(flag != this.isBurning()) {
-				flag1 = true;
-				TectonicOven.updateForgeOvenBlockState(this.burnTime > 0, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
-			}
-		}
-
-		if(flag1)
-			this.markDirty();
 	}
 	public boolean canSmelt() {
 		if(this.slots[0] == null) {

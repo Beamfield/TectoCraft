@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.World;
 
 public class ItemTectoniumArmor extends ItemArmor{
 
@@ -38,4 +39,8 @@ public class ItemTectoniumArmor extends ItemArmor{
 			return Reference.MODID + ":textures/models/armor/tectonium1.png";
 			return null;
 	}
+	 public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack)
+	    {
+		 	itemStack.setItemDamage(this.getMaxDamage());
+	    }
 }
